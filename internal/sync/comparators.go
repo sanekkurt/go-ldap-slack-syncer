@@ -2,6 +2,8 @@ package sync
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/slack-go/slack"
@@ -9,10 +11,13 @@ import (
 	"go-ldap-slack-syncer/internal/services/types"
 )
 
+var (
+	ErrInvalidDataType = errors.New("invalid data type")
+)
+
 func CompareUsers(ctx context.Context, service types.Service) ([]slack.User, error) {
 	var (
-		usersDeletionQueue []slack.User
-		flagsConf          = config.GetFlagsConfig()
+		flagsConf = config.GetFlagsConfig()
 	)
 
 	ldapData, err := service.GetLdapData(ctx)
@@ -25,8 +30,26 @@ func CompareUsers(ctx context.Context, service types.Service) ([]slack.User, err
 		return nil, err
 	}
 
-	ldapUsers := ldapData.(map[string]string)
-	slackUsers := slackData.([]slack.User)
+	ldapUsers, ok := ldapData.(map[string]string)
+	if !ok {
+		return nil, fmt.Errorf("%w: expected map[string]string", ErrInvalidDataType)
+	}
+
+	slackUsers, ok := slackData.([]slack.User)
+	if !ok {
+		return nil, fmt.Errorf("%w: expected []slack.User", ErrInvalidDataType)
+	}
+
+	usersDeletionQueue := compare(ctx, flagsConf, ldapUsers, slackUsers)
+
+	return usersDeletionQueue, nil
+}
+
+func compare(ctx context.Context, flagsConf config.FlagsConfig, ldapUsers map[string]string, slackUsers []slack.User) []slack.User {
+	var (
+		usersDeletionQueue []slack.User
+	)
+
 	for _, slackUser := range slackUsers {
 		if slackUser.Deleted || slackUser.IsBot {
 			continue
@@ -46,9 +69,10 @@ func CompareUsers(ctx context.Context, service types.Service) ([]slack.User, err
 					}
 				}
 			}
+
 			usersDeletionQueue = append(usersDeletionQueue, slackUser)
 		}
 	}
 
-	return usersDeletionQueue, nil
+	return usersDeletionQueue
 }
