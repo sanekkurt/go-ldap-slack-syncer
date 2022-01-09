@@ -1,0 +1,34 @@
+ldap:
+  host:
+    address: "127.0.0.1"
+    port: 3268
+
+  account:
+    username: "CN=xxxxx,OU=xxxxx,DC=xxxxx"
+    password: "xxxx"
+
+  settings:
+    timeLimitConnection: 1m
+    pagingSize: 50 # the number of records received from the ldap server per request. PS.: a page-by-page request is enabled, if there are more than 50 records in the response, a new request will be automatically sent to receive the remaining 50 records, and so on
+    sizeLimit: 100000 # the limit of receiving the total number of records
+    baseDnSearchSuffix: "DC=xxxx,DC=xxxx" # search suffix
+
+  security:
+    minNumberUsers: 43000 # the minimum number of users for the server. If the utility receives users from the LDAP server less than specified, an error will be returned and all further actions will be stopped.
+
+slack:
+  userOAuthToken: "xoxp-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # The user access token for the application. Used for actions on user accounts
+  botUserOAuthToken: "xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # Bot access token for the application. Used to send notifications to the channel on behalf of the bot
+  notificationChannelID: "Cxxxxxxxxxx" # ID of the notification channel
+  workspaceName: "workspace-name"
+
+storage:
+  mysql:
+    address: localhost
+    port: 3306
+    database: namedatabase
+    username: user
+    password: password
+
+time:
+  maximumWorking: 3h # maximum operating time of the utility
