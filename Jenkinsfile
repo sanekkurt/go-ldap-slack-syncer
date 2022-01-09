@@ -7,7 +7,7 @@ pipeline {
         GO117MODULE = 'on'
         CGO_ENABLED = 0
         GOPATH = "${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_ID}"
-        registry = "sanekkurt/test-jenkins"
+        registry = "sanekkurt/go-ldap-slack-syncer"
         registryCredential = 'dockerhub'
         dockerImage = ''
     }
