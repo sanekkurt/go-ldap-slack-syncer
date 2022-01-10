@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// test
+// test1
 
 func TestCompare(t *testing.T) {
 	var (
