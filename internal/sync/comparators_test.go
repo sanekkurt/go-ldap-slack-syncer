@@ -7,6 +7,8 @@ import (
 	"testing"
 )
 
+// test
+
 func TestCompare(t *testing.T) {
 	var (
 		ldapUsers  = map[string]string{"a@mail.ru": "", "b@mail.ru": ""}
