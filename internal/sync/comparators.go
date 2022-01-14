@@ -45,6 +45,7 @@ func CompareUsers(ctx context.Context, service types.Service) ([]slack.User, err
 	return usersDeletionQueue, nil
 }
 
+// test
 func compare(ctx context.Context, flagsConf config.FlagsConfig, ldapUsers map[string]string, slackUsers []slack.User) []slack.User {
 	var (
 		usersDeletionQueue []slack.User
